@@ -15,6 +15,8 @@ class HouseInventory(object):
 		"""
 		for room, item_list in self.house_structure.items():
 
+			print("Room: {}".format(room))
+
 			for item, element in item_list.items():
 
 				print(item + ':' + ' ' + element)
@@ -48,7 +50,7 @@ class HouseInventoryCost:
 
 def main():
 
-	data_dictionary = dict()
+	global data_dictionary
 
 	room_list = str(input("Enter room names seprated by comma")).split(",")
 
@@ -68,36 +70,68 @@ def main():
 
 		print("=============================================================================")
 
-	return data_dictionary
 
 if __name__ == '__main__':
 
 	
 	print("HOUSE INVENTORY TRACKER")
 
+	data_dictionary = dict()
+
 	while True:
 
-		choice = int(input("Press 1: to start listing rooms and items for 1st time\nPress 2: To exit\n"))
+		choice = int(input("Press 1: to start listing rooms and items for 1st time\nPress 2: Wish to add details about more rooms?. Add room. Add items and cost\nPress 3: To exit\n"))
 
 		if choice == 1:
-			data_dictionary = main()
-			house = HouseInventory(data_dictionary)
-			house.get_format_output()
-			print(len(house))
+			main()
 
-			room_list = [room for room in data_dictionary.keys()]
-
-			s = ','.join(room_list)
-
-			housecost = HouseInventoryCost()
-			print(housecost.get_total_item_cost(**data_dictionary))
-
-
-
-			room = input("Out of above mentioned room, enter room name you wish to list?")
-			if room in data_dictionary.keys():
-				house[room]
-			else:
-				print("Invalid Room")
 		elif choice == 2:
+
+			new_room_details = dict()
+
+			room_name = input("Wish to add more rooms? Enter the room name").split(",")
+
+			for room in room_name:
+
+				new_item_details = dict()
+
+				if room not in data_dictionary.keys():
+					items_list = input("Mention items present in the {}".format(room)).split(",")
+
+					for item in items_list:
+						item_cost = input("Enter cost for {}".format(item))
+
+						new_item_details[item] = item_cost
+
+				data_dictionary[room] = new_item_details
+		elif choice == 3:
 			break
+
+
+		house = HouseInventory(data_dictionary)
+		house.get_format_output()
+		print(len(house))
+
+		room_list = [room for room in data_dictionary.keys()]
+
+		s = ','.join(room_list)
+		print(s)
+
+		housecost = HouseInventoryCost()
+		print(housecost.get_total_item_cost(**data_dictionary))
+
+		room = input("Out of above mentioned room, enter room name you wish to list?")
+		if room in data_dictionary.keys():
+			house[room]
+		else:
+			print("Invalid Room")
+
+
+
+
+			
+
+
+
+
+	
